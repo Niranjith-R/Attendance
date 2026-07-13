@@ -1,4 +1,5 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: '📊' },
@@ -9,6 +10,14 @@ const navItems = [
 ];
 
 export default function Layout() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   return (
     <div className="flex min-h-screen">
       <aside className="fixed inset-y-0 left-0 w-64 bg-primary-900 text-white flex flex-col">
@@ -37,8 +46,17 @@ export default function Layout() {
           ))}
         </nav>
 
-        <div className="px-6 py-4 border-t border-primary-700">
-          <p className="text-primary-400 text-xs">© 2026 AttendanceMS</p>
+        <div className="px-4 py-4 border-t border-primary-700">
+          <div className="px-2 mb-3">
+            <p className="text-sm font-medium text-white truncate">{user?.name}</p>
+            <p className="text-xs text-primary-400 truncate">{user?.email}</p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="w-full px-4 py-2 text-sm font-medium text-primary-200 hover:text-white hover:bg-primary-800 rounded-lg transition-colors"
+          >
+            Sign Out
+          </button>
         </div>
       </aside>
 
